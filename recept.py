@@ -1,12 +1,30 @@
 """A receptek alkalmazás fő modulja
 
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from adatok.adatok import UZLETEK, ELELMISZEREK, kovetkezo_uzlet_id
 from adatmodell.uzletek_adat_modell import Uzlet, UzletRequest
+from starlette.staticfiles import StaticFiles
+
+
+
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/test")
+async def test(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+
+@app.get("/test2")
+async def test2(request: Request):
+    return templates.TemplateResponse("uj_uzlet.html", {"request": request})
 
 
 @app.get("/uzletek_lekerdez")
@@ -48,6 +66,7 @@ async def elelmiszerek_lekerdez():
     """
     return ELELMISZEREK
 
+# MARK: Innen folytasd a munkát
 # @app.put("/elelmiszerek")
 # async def rogzit_elelmiszerek():
 #     return ELELMISZEREK
