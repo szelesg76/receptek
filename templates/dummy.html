@@ -1,0 +1,24 @@
+                            {% for user in users %}
+                                <td>{{ loop.index }}</td>
+                                <td>{{ user.username|e }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-success">Módosít</button>
+                                    <button type="button" class="btn btn-outline-danger">Töröl</button>
+                                </td>
+                            {% endfor %}
+
+
+
+
+<button type="submit" href="{{ url_for('uzlet_rogzites') }}" class="btn btn-outline-primary  mt-3">Új üzlet rögzítése</button>
+<a class="btn btn-outline-primary" href="{{ url_for('uzletek')}}">Új üzlet</a>
+
+
+
+
+
+<button type="button" class="btn btn-outline-success" href="{{ url_for('uzlet_modosit',uzlet_id=uzlet.uzlet_id)}}">Módosít</button>
+
+
+
+<button  onclick="window.location.href='/uzlet_modosit/{{uzlet.uzlet_id}}'" type="button" class="btn btn-outline-success">Módosít</button>

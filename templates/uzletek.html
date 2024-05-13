@@ -14,7 +14,7 @@
 
         <div>
             <nav class="navbar navbar-expand-md navbar-dark main-color fixed-top">
-                <a class="navbar-brand" href="#">Receptek</a>
+                <a class="navbar-brand" href="#">Üzletek</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigator">
                     <span class="navbar-toggler-icon"></span>
@@ -33,11 +33,11 @@
         <div class="container">
             <div class="card text-center">
                 <div class="card-header">
-                    Az üzletek
+                    Üzletek
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Üzletek</h5>
-                    <p class="card-text">Be kell fejezni</p>
+<!--                    <p class="card-text">Be kell fejezni</p> -->
 
                 <table class="table table-hover table-striped">
                     <caption class="mt-2">Üzletek listája</caption>
@@ -50,17 +50,30 @@
                     </thead>
 
                     <tbody>
+                        {% for uzlet in uzletek %}
+                        <tr class="pointer"></tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ uzlet }}</td>
+                            <td>
+                                <a class="btn btn-outline-success" href="{{ url_for('uzlet_modosit',uzlet_id=loop.index) }}">Módosít</a>
+                                <a class="btn btn-outline-danger" href="{{ url_for('uzlet_torol',uzlet_id=loop.index) }}" >Töröl</a> 
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+<!--
                         <tr class="pointer">
-                            <td>1</td>
-                            <td>Lidl</td>
+                            <td>2</td>
+                            <td>{{ id }}</td>
                             <td>
                                 <button type="button" class="btn btn-outline-success">Módosít</button>
                                 <button type="button" class="btn btn-outline-danger">Töröl</button>
                             </td>
-                        </tr>
+    -->
+
                     </tbody>
                 </table>
-                    <a class="btn btn-outline-primary" href="#">Új üzlet</a>
+                    <a class="btn btn-outline-primary" href="{{ url_for('uzlet_letrehozas')}}">Új üzlet</a>
                 </div>
             </div>
         </div>
