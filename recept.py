@@ -5,7 +5,7 @@
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from adatbazis.adatok import UZLETEK, ELELMISZEREK, kovetkezo_uzlet_id
+# from adatbazis.adatok import UZLETEK, ELELMISZEREK, kovetkezo_uzlet_id
 from adatmodell.uzletek_adat_modell import Uzlet, UzletRequest
 from starlette.staticfiles import StaticFiles
 from starlette.responses import RedirectResponse
