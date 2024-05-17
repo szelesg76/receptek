@@ -53,7 +53,7 @@
                         {% for uzlet in uzletek %}
                         <tr class="pointer"></tr>
                             <td>{{ loop.index }}</td>
-                            <td>{{ uzlet }}</td>
+                            <td>{{ uzlet.uzlet_nev }}</td>
                             <td>
                                 <a class="btn btn-outline-success" href="{{ url_for('uzlet_modosit',uzlet_id=loop.index) }}">Módosít</a>
                                 <a class="btn btn-outline-danger" href="{{ url_for('uzlet_torol',uzlet_id=loop.index) }}" >Töröl</a> 
