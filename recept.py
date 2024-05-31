@@ -1,12 +1,12 @@
 """A receptek alkalmazás fő modulja
 
 """
-
+import os
 from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 # from adatbazis.adatok import UZLETEK, ELELMISZEREK, kovetkezo_uzlet_id
-from adatmodell.uzletek_adat_modell import Uzlet, UzletRequest
+# from adatmodell.uzletek_adat_modell import Uzlet, UzletRequest
 from starlette.staticfiles import StaticFiles
 from starlette.responses import RedirectResponse
 from starlette import status
@@ -15,13 +15,17 @@ from sqlalchemy.orm import Session
 
 from adatbazis.adatbazis import engine, SessionLocal
 import adatmodell.uzletek_modell as uzletek_modell
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
 
 uzletek_modell.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount('/static', StaticFiles(directory=os.path.join(current_dir, 'static')), name='static')
+app.mount("/static", StaticFiles(directory=Path(BASE_DIR, 'static')), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -31,6 +35,12 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.get('/favicon.ico')
+async def favicon():
+    file_name = "favicon.ico"
+    file_path = os.path.join(app.root_path, "static", file_name)
+    return FileResponse(path=file_path, headers={"Content-Disposition": "attachment; filename=" + file_name})
 
 
 # @app.get("/test")
@@ -134,6 +144,13 @@ async def uzlet_torol(request: Request, uzlet_id: int, db: Session = Depends(get
     db.commit()
     
     return RedirectResponse(url="/uzletek", status_code=status.HTTP_302_FOUND)
+
+
+# support endpoint
+@app.get("/healthy")
+def health_check():
+    return {'status': 'Healthy'}
+
 
 
 
