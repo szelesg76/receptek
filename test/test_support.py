@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-import recept
+from recept import app
 from fastapi import status
 
-client = TestClient(recept.app)
+client = TestClient(app)
 
 
 def test_return_health_check():

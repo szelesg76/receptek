@@ -6,10 +6,11 @@ from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 # from adatbazis.adatok import UZLETEK, ELELMISZEREK, kovetkezo_uzlet_id
-# from adatmodell.uzletek_adat_modell import Uzlet, UzletRequest
+from adatmodell.uzletek_modell import Uzletek
 from starlette.staticfiles import StaticFiles
 from starlette.responses import RedirectResponse
 from starlette import status
+from typing import Annotated
 
 from sqlalchemy.orm import Session
 
@@ -36,6 +37,10 @@ def get_db():
     finally:
         db.close()
 
+
+Dbdepedency = Annotated[Session, Depends(get_db)]
+
+
 @app.get('/favicon.ico')
 async def favicon():
     file_name = "favicon.ico"
@@ -53,7 +58,8 @@ async def favicon():
 #     return templates.TemplateResponse(name="home.html",  request=request, context={"id": id})
 
 @app.get("/uzletek", response_class=HTMLResponse)
-async def uzletek(request: Request, db: Session = Depends(get_db)):
+async def uzletek(request: Request, db: Dbdepedency):
+# async def uzletek(request: Request, db: Session = Depends(get_db)):
     # return templates.TemplateResponse(name="uzletek.html",  request=request, context={"uzletek": UZLETEK})
     uzletek_adat = db.query(uzletek_modell.Uzletek).all()
     # for row in uzletek_adat:
@@ -62,9 +68,26 @@ async def uzletek(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(name="uzletek.html",  request=request, context={"uzletek": uzletek_adat})
     # return templates.TemplateResponse("uzletek.html", {"request": request, "uzletek": uzletek_adat})
 
+
+@app.get("/test_case_uzletek")
+async def test_case_uzletek(db: Dbdepedency):
+# async def uzletek(request: Request, db: Session = Depends(get_db)):
+    """Új üzlet rögzítése
+
+    Args:
+        db (Dbdepedency): Adatbázis kapcsolat beállítása
+
+    Returns:
+        list: Visszatér az üzletek adatával
+    """
+    uzletek_adat = db.query(uzletek_modell.Uzletek).all()
+    return uzletek_adat
+
+
 @app.get("/uzlet_uj", response_class=HTMLResponse)
 async def uzlet_letrehozas(request: Request):
     return templates.TemplateResponse(name="uzlet_uj.html", request=request)
+
 
 
 #, uzlet_request: UzletRequest,
@@ -97,6 +120,26 @@ async def uzlet_letrehozas_mentes(request: Request, uzlet_nev: str = Form(...), 
     db.commit()
     
     return RedirectResponse(url="/uzletek", status_code=status.HTTP_302_FOUND)
+
+
+
+@app.post("/test_case_uzlet_uj")
+async def test_case_uzlet_uj(uzlet_nev: str, db: Dbdepedency):
+    """Új üzlet rögzítése
+
+    Args:
+        elkészíteni majd
+
+    Returns:
+        list: Visszatér az új üzlet adatával
+    """
+    uzlet_adat = uzletek_modell.Uzletek()
+    uzlet_adat.uzlet_nev = uzlet_nev
+    # uzlet_adat = uzlet_request
+    db.add(uzlet_adat)
+    db.commit()
+    return {'uzlet_nev':uzlet_adat.uzlet_nev}
+
 
 
 
