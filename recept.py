@@ -14,7 +14,11 @@ from typing import Annotated
 
 from sqlalchemy.orm import Session
 
-from adatbazis.adatbazis import engine, SessionLocal
+# ÉLES adatbázis
+#from adatbazis.adatbazis import engine, SessionLocal
+
+# TESZT adatbázis
+from adatbazis.adatbazis_teszt import engine, SessionLocal
 import adatmodell.uzletek_modell as uzletek_modell
 from pathlib import Path
 
